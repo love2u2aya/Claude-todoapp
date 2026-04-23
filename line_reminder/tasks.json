@@ -1,0 +1,8 @@
+{
+  "tasks": [
+    {"id": "expense",  "name": "経費精算"},
+    {"id": "report",   "name": "週次レポート作成"},
+    {"id": "email",    "name": "未返信メールの確認"},
+    {"id": "backlog",  "name": "バックログ整理"}
+  ]
+}
