@@ -7,6 +7,8 @@ import pytz
 
 JST = pytz.timezone("Asia/Tokyo")
 
+DAY_MAP = {"月": 0, "火": 1, "水": 2, "木": 3, "金": 4}
+
 
 def load_config():
     script_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -14,19 +16,30 @@ def load_config():
         return yaml.safe_load(f)
 
 
-def build_message(config: dict) -> str:
-    tasks = config["weekly_tasks"]
-    msgs = config["messages"]
+def tasks_for_today(all_tasks: list, weekday: int) -> list:
+    result = []
+    for t in all_tasks:
+        days = t.get("days")
+        if days is None:
+            result.append(t)
+        elif weekday in [DAY_MAP[d] for d in days if d in DAY_MAP]:
+            result.append(t)
+    return result
 
+
+def build_message(config: dict) -> str | None:
     now = datetime.now(JST)
+    tasks = tasks_for_today(config["weekly_tasks"], now.weekday())
+
+    if not tasks:
+        return None
+
+    msgs = config["messages"]
     is_monday = now.weekday() == 0
     date_str = now.strftime("%m/%d (%a)")
-
     header = msgs["monday_morning_line"] if is_monday else msgs["weekday_morning_line"]
-
     task_lines = "\n".join(f"{t['emoji']} {t['title']}" for t in tasks)
-
-    footer = "今週も頑張りましょう💪" if is_monday else "今日こそ片付けましょう！"
+    footer = "今週も頑張りましょう💪" if is_monday else "今日も頑張りましょう！"
 
     return (
         f"{header}\n"
@@ -65,6 +78,11 @@ def send(message: str):
 def main():
     config = load_config()
     message = build_message(config)
+
+    if message is None:
+        print("今日のタスクなし。スキップします。")
+        return
+
     print("--- message preview ---")
     print(message)
     print("-----------------------")

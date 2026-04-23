@@ -1,15 +1,22 @@
+# days: 送る曜日を指定（月 火 水 木 金）
+# days を省略すると毎日送られます
+
 weekly_tasks:
   - title: "経費精算"
     emoji: "💰"
+    days: [月]
   - title: "週次レポート提出"
     emoji: "📊"
+    days: [金]
   - title: "チームMTG議事録作成"
     emoji: "📝"
+    days: [火]
   - title: "翌週のスケジュール確認"
     emoji: "📅"
+    days: [金]
 
 messages:
-  monday_morning_line: "🌅 週の始まりです！今週のタスクリスト"
-  weekday_morning_line: "☀️ おはようございます！まだ残っているタスクがあります"
+  monday_morning_line: "🌅 週の始まりです！今日のタスクリスト"
+  weekday_morning_line: "☀️ おはようございます！今日のタスクです"
   evening_slack_header: "🌙 夕方のタスク確認"
   evening_slack_note: "未完了があれば、明朝もLINEでお知らせします 📱"
