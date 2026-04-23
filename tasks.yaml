@@ -2,18 +2,21 @@
 # days を省略すると毎日送られます
 
 weekly_tasks:
-  - title: "経費精算"
-    emoji: "💰"
+  - title: "アウェアネスに登録者数報告"
+    emoji: "📣"
+    days: [月, 金]
+  - title: "アウェアネス活動報告"
+    emoji: "📋"
     days: [月]
-  - title: "週次レポート提出"
-    emoji: "📊"
-    days: [金]
-  - title: "チームMTG議事録作成"
-    emoji: "📝"
+  - title: "うーままさん案件まとめる"
+    emoji: "📁"
     days: [火]
-  - title: "翌週のスケジュール確認"
-    emoji: "📅"
-    days: [金]
+  - title: "今週更新のYoutubeを確認（サムネ・ショートも確認）"
+    emoji: "🎥"
+    days: [水]
+  - title: "集客ミーティング前に報告まとめる"
+    emoji: "📊"
+    days: [木]
 
 messages:
   monday_morning_line: "🌅 週の始まりです！今日のタスクリスト"
