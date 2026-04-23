@@ -1,0 +1,45 @@
+name: Morning LINE Reminder
+
+on:
+  schedule:
+    # 9:00 AM JST = 0:00 UTC, Mon–Fri
+    - cron: "0 0 * * 1-5"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run (print message without sending)"
+        type: boolean
+        default: false
+
+jobs:
+  send-line:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install requests pyyaml pytz
+
+      - name: Send LINE reminder
+        if: ${{ !inputs.dry_run }}
+        env:
+          LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
+          LINE_USER_ID: ${{ secrets.LINE_USER_ID }}
+        run: python scripts/send_line.py
+
+      - name: Dry run (preview only)
+        if: ${{ inputs.dry_run }}
+        run: |
+          export LINE_CHANNEL_ACCESS_TOKEN=dummy
+          export LINE_USER_ID=dummy
+          python -c "
+          import yaml, os, sys
+          sys.path.insert(0, 'scripts')
+          from send_line import load_config, build_message
+          config = load_config()
+          print(build_message(config))
+          "

@@ -1,0 +1,42 @@
+name: Evening Slack Reminder
+
+on:
+  schedule:
+    # 6:00 PM JST = 9:00 UTC, Mon–Fri
+    - cron: "0 9 * * 1-5"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run (print blocks without sending)"
+        type: boolean
+        default: false
+
+jobs:
+  send-slack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install requests pyyaml pytz
+
+      - name: Send Slack reminder
+        if: ${{ !inputs.dry_run }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: python scripts/send_slack.py
+
+      - name: Dry run (preview only)
+        if: ${{ inputs.dry_run }}
+        run: |
+          python -c "
+          import sys
+          sys.path.insert(0, 'scripts')
+          from send_slack import load_config, build_blocks
+          config = load_config()
+          for b in build_blocks(config): print(b)
+          "

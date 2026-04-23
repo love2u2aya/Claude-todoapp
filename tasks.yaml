@@ -1,0 +1,15 @@
+weekly_tasks:
+  - title: "経費精算"
+    emoji: "💰"
+  - title: "週次レポート提出"
+    emoji: "📊"
+  - title: "チームMTG議事録作成"
+    emoji: "📝"
+  - title: "翌週のスケジュール確認"
+    emoji: "📅"
+
+messages:
+  monday_morning_line: "🌅 週の始まりです！今週のタスクリスト"
+  weekday_morning_line: "☀️ おはようございます！まだ残っているタスクがあります"
+  evening_slack_header: "🌙 夕方のタスク確認"
+  evening_slack_note: "未完了があれば、明朝もLINEでお知らせします 📱"
