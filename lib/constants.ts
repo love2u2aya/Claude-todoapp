@@ -1,19 +1,33 @@
 import { TaskType, TaskStatus, VideoStatus } from './types';
 
 export const TASK_TYPES: TaskType[] = [
-  'planning',
-  'scripting',
-  'recording',
-  'editing',
   'thumbnail',
+  'recording',
+  'cut',
+  'telop',
+  'ppt_create',
+  'ppt_attach',
+  'expression',
+  'se',
+  'illustration',
+  'finishing',
+  'short',
+  'upload',
 ];
 
 export const TASK_TYPE_LABELS: Record<TaskType, string> = {
-  planning: '企画',
-  scripting: '台本',
-  recording: '収録',
-  editing: '編集',
-  thumbnail: 'サムネイル',
+  thumbnail: 'サムネ作成',
+  recording: '動画撮影(音声)',
+  cut: 'カット',
+  telop: 'テロップ',
+  ppt_create: 'パワポ資料作成',
+  ppt_attach: 'パワポ資料つけ',
+  expression: '表情つけ',
+  se: 'SEつけ',
+  illustration: 'イラストつけ',
+  finishing: '仕上げ',
+  short: 'ショート作成',
+  upload: 'アップロード',
 };
 
 export const STATUS_CONFIG: Record<

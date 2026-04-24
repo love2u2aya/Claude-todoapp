@@ -1,25 +1,29 @@
 'use client';
 import { useState } from 'react';
-import { Worker, TaskType } from '@/lib/types';
-import { TASK_TYPES, TASK_TYPE_LABELS } from '@/lib/constants';
+import { Worker, TaskType, TaskStatus, Task } from '@/lib/types';
+import { TASK_TYPES, TASK_TYPE_LABELS, TASK_STATUSES, STATUS_CONFIG } from '@/lib/constants';
 import { Button } from '@/components/shared/Button';
 import { Input } from '@/components/shared/Input';
 import { Select } from '@/components/shared/Select';
-import { addTask } from '@/lib/firestore/tasks';
+import { addTask, updateTask } from '@/lib/firestore/tasks';
 
 interface TaskFormProps {
   videoId: string;
   workers: Worker[];
   onClose: () => void;
+  /** 編集モード: 既存タスクを渡す */
+  editTask?: Task;
 }
 
-export function TaskForm({ videoId, workers, onClose }: TaskFormProps) {
-  const [type, setType] = useState<TaskType>('editing');
-  const [label, setLabel] = useState('');
-  const [workerId, setWorkerId] = useState('');
-  const [notes, setNotes] = useState('');
+export function TaskForm({ videoId, workers, onClose, editTask }: TaskFormProps) {
+  const [type, setType] = useState<TaskType>(editTask?.type ?? 'thumbnail');
+  const [label, setLabel] = useState(editTask?.label ?? '');
+  const [workerId, setWorkerId] = useState(editTask?.assignedWorkerId ?? '');
+  const [status, setStatus] = useState<TaskStatus>(editTask?.status ?? 'todo');
+  const [notes, setNotes] = useState(editTask?.notes ?? '');
   const [saving, setSaving] = useState(false);
 
+  const isEdit = !!editTask;
   const selectedWorker = workers.find((w) => w.id === workerId);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -27,14 +31,25 @@ export function TaskForm({ videoId, workers, onClose }: TaskFormProps) {
     if (!label.trim() || !workerId) return;
     setSaving(true);
     try {
-      await addTask({
-        videoId,
-        type,
-        label: label.trim(),
-        assignedWorkerId: workerId,
-        assignedWorkerName: selectedWorker?.name ?? '',
-        notes: notes.trim() || undefined,
-      });
+      if (isEdit) {
+        await updateTask(editTask.id, {
+          type,
+          label: label.trim(),
+          assignedWorkerId: workerId,
+          assignedWorkerName: selectedWorker?.name ?? '',
+          status,
+          notes: notes.trim() || undefined,
+        });
+      } else {
+        await addTask({
+          videoId,
+          type,
+          label: label.trim(),
+          assignedWorkerId: workerId,
+          assignedWorkerName: selectedWorker?.name ?? '',
+          notes: notes.trim() || undefined,
+        });
+      }
       onClose();
     } finally {
       setSaving(false);
@@ -54,13 +69,15 @@ export function TaskForm({ videoId, workers, onClose }: TaskFormProps) {
           </option>
         ))}
       </Select>
+
       <Input
         label="タスク名 *"
         value={label}
         onChange={(e) => setLabel(e.target.value)}
-        placeholder="例: EP42 編集"
+        placeholder="例: EP42 カット編集"
         required
       />
+
       <Select
         label="担当ワーカー *"
         value={workerId}
@@ -74,6 +91,21 @@ export function TaskForm({ videoId, workers, onClose }: TaskFormProps) {
           </option>
         ))}
       </Select>
+
+      {isEdit && (
+        <Select
+          label="ステータス"
+          value={status}
+          onChange={(e) => setStatus(e.target.value as TaskStatus)}
+        >
+          {TASK_STATUSES.map((s) => (
+            <option key={s} value={s}>
+              {STATUS_CONFIG[s].label}
+            </option>
+          ))}
+        </Select>
+      )}
+
       <div className="flex flex-col gap-1">
         <label className="text-sm font-medium text-gray-700">メモ</label>
         <textarea
@@ -84,9 +116,10 @@ export function TaskForm({ videoId, workers, onClose }: TaskFormProps) {
           className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
         />
       </div>
+
       <div className="flex gap-3 pt-1">
         <Button type="submit" disabled={saving || !label.trim() || !workerId}>
-          {saving ? '追加中...' : 'タスクを追加'}
+          {saving ? '保存中...' : isEdit ? '変更を保存' : 'タスクを追加'}
         </Button>
         <Button type="button" variant="secondary" onClick={onClose}>
           キャンセル

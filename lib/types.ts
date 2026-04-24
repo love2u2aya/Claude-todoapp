@@ -1,6 +1,19 @@
 import { Timestamp } from 'firebase/firestore';
 
-export type TaskType = 'planning' | 'scripting' | 'recording' | 'editing' | 'thumbnail';
+export type TaskType =
+  | 'thumbnail'
+  | 'recording'
+  | 'cut'
+  | 'telop'
+  | 'ppt_create'
+  | 'ppt_attach'
+  | 'expression'
+  | 'se'
+  | 'illustration'
+  | 'finishing'
+  | 'short'
+  | 'upload';
+
 export type TaskStatus = 'todo' | 'in_progress' | 'review' | 'done';
 export type VideoStatus = 'pre_production' | 'in_production' | 'in_review' | 'published';
 

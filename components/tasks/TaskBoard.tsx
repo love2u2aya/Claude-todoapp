@@ -60,7 +60,7 @@ export function TaskBoard({ videoId, tasks, workers }: TaskBoardProps) {
               </div>
               <div className="flex flex-col gap-3">
                 {col.map((task) => (
-                  <TaskCard key={task.id} task={task} />
+                  <TaskCard key={task.id} task={task} workers={workers} />
                 ))}
                 {col.length === 0 && (
                   <div className="border-2 border-dashed border-gray-200 rounded-xl h-20 flex items-center justify-center">
