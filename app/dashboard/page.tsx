@@ -11,10 +11,12 @@ import { Task, TaskStatus } from '@/lib/types';
 import { subscribeToAllTasks } from '@/lib/firestore/tasks';
 
 const STATUS_DOT: Record<TaskStatus, string> = {
-  todo:        'bg-gray-300',
-  in_progress: 'bg-blue-400',
-  review:      'bg-yellow-400',
-  done:        'bg-green-500',
+  todo:          'bg-gray-300',
+  needs_request: 'bg-orange-400',
+  waiting:       'bg-purple-400',
+  in_progress:   'bg-blue-400',
+  review:        'bg-yellow-400',
+  done:          'bg-green-500',
 };
 
 export default function DashboardPage() {
@@ -68,7 +70,7 @@ export default function DashboardPage() {
       {/* 凡例 */}
       <div className="flex items-center gap-4 mb-3 text-xs text-gray-500">
         <span className="font-medium text-gray-600">凡例:</span>
-        {(['todo', 'in_progress', 'review', 'done'] as TaskStatus[]).map((s) => (
+        {(['todo', 'needs_request', 'waiting', 'in_progress', 'review', 'done'] as TaskStatus[]).map((s) => (
           <span key={s} className="flex items-center gap-1.5">
             <span className={`w-2.5 h-2.5 rounded-full ${STATUS_DOT[s]}`} />
             {STATUS_CONFIG[s].label}

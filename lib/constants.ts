@@ -40,6 +40,18 @@ export const STATUS_CONFIG: Record<
     bgColor: 'bg-gray-100',
     borderColor: 'border-gray-200',
   },
+  needs_request: {
+    label: '要依頼',
+    color: 'text-orange-700',
+    bgColor: 'bg-orange-100',
+    borderColor: 'border-orange-200',
+  },
+  waiting: {
+    label: '回答待ち',
+    color: 'text-purple-700',
+    bgColor: 'bg-purple-100',
+    borderColor: 'border-purple-200',
+  },
   in_progress: {
     label: '進行中',
     color: 'text-blue-700',
@@ -70,4 +82,4 @@ export const VIDEO_STATUS_CONFIG: Record<
   published: { label: '公開済み', color: 'text-green-700', bgColor: 'bg-green-100' },
 };
 
-export const TASK_STATUSES: TaskStatus[] = ['todo', 'in_progress', 'review', 'done'];
+export const TASK_STATUSES: TaskStatus[] = ['todo', 'needs_request', 'waiting', 'in_progress', 'review', 'done'];

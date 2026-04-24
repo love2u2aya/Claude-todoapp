@@ -14,7 +14,7 @@ export type TaskType =
   | 'short'
   | 'upload';
 
-export type TaskStatus = 'todo' | 'in_progress' | 'review' | 'done';
+export type TaskStatus = 'todo' | 'needs_request' | 'waiting' | 'in_progress' | 'review' | 'done';
 export type VideoStatus = 'pre_production' | 'in_production' | 'in_review' | 'published';
 
 export interface Worker {

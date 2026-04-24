@@ -18,6 +18,8 @@ export function TaskBoard({ videoId, tasks, workers }: TaskBoardProps) {
 
   const columns: Record<TaskStatus, Task[]> = {
     todo: [],
+    needs_request: [],
+    waiting: [],
     in_progress: [],
     review: [],
     done: [],
@@ -46,7 +48,7 @@ export function TaskBoard({ videoId, tasks, workers }: TaskBoardProps) {
         </div>
       )}
 
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-6 gap-3">
         {TASK_STATUSES.map((status) => {
           const cfg = STATUS_CONFIG[status];
           const col = columns[status];

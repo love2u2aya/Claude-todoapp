@@ -79,7 +79,7 @@ export function TaskCard({ task, workers }: TaskCardProps) {
           onChange={(e) => updateTaskStatus(task.id, e.target.value as TaskStatus)}
           className={`text-xs font-semibold px-2 py-1 rounded-full border cursor-pointer ${STATUS_CONFIG[task.status].bgColor} ${STATUS_CONFIG[task.status].color} ${STATUS_CONFIG[task.status].borderColor}`}
         >
-          {(['todo', 'in_progress', 'review', 'done'] as TaskStatus[]).map((s) => (
+          {(['todo', 'needs_request', 'waiting', 'in_progress', 'review', 'done'] as TaskStatus[]).map((s) => (
             <option key={s} value={s}>
               {STATUS_CONFIG[s].label}
             </option>
