@@ -9,10 +9,11 @@ export function useVideoTasks(videoId: string) {
 
   useEffect(() => {
     if (!videoId) return;
-    const unsub = subscribeToVideoTasks(videoId, (t) => {
-      setTasks(t);
-      setLoading(false);
-    });
+    const unsub = subscribeToVideoTasks(
+      videoId,
+      (t) => { setTasks(t); setLoading(false); },
+      () => setLoading(false)
+    );
     return unsub;
   }, [videoId]);
 

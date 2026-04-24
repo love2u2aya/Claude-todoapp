@@ -7,10 +7,10 @@ import {
   onSnapshot,
   query,
   where,
-  orderBy,
   serverTimestamp,
   DocumentData,
   QueryDocumentSnapshot,
+  Timestamp,
 } from 'firebase/firestore';
 import { db } from '../firebase';
 import { Task, TaskStatus, TaskType } from '../types';
@@ -32,32 +32,46 @@ function docToTask(d: QueryDocumentSnapshot<DocumentData>): Task {
   };
 }
 
-export function subscribeToVideoTasks(videoId: string, cb: (tasks: Task[]) => void) {
+function sortByCreatedAt(tasks: Task[], dir: 'asc' | 'desc' = 'asc'): Task[] {
+  return [...tasks].sort((a, b) => {
+    const ta = a.createdAt instanceof Timestamp ? a.createdAt.toMillis() : 0;
+    const tb = b.createdAt instanceof Timestamp ? b.createdAt.toMillis() : 0;
+    return dir === 'asc' ? ta - tb : tb - ta;
+  });
+}
+
+export function subscribeToVideoTasks(
+  videoId: string,
+  cb: (tasks: Task[]) => void,
+  onError?: (e: Error) => void
+) {
   return onSnapshot(
-    query(
-      collection(db, 'tasks'),
-      where('videoId', '==', videoId),
-      orderBy('createdAt', 'asc')
-    ),
-    (snap) => cb(snap.docs.map(docToTask))
+    query(collection(db, 'tasks'), where('videoId', '==', videoId)),
+    (snap) => cb(sortByCreatedAt(snap.docs.map(docToTask), 'asc')),
+    onError
   );
 }
 
-export function subscribeToWorkerTasks(workerId: string, cb: (tasks: Task[]) => void) {
+export function subscribeToWorkerTasks(
+  workerId: string,
+  cb: (tasks: Task[]) => void,
+  onError?: (e: Error) => void
+) {
   return onSnapshot(
-    query(
-      collection(db, 'tasks'),
-      where('assignedWorkerId', '==', workerId),
-      orderBy('createdAt', 'desc')
-    ),
-    (snap) => cb(snap.docs.map(docToTask))
+    query(collection(db, 'tasks'), where('assignedWorkerId', '==', workerId)),
+    (snap) => cb(sortByCreatedAt(snap.docs.map(docToTask), 'desc')),
+    onError
   );
 }
 
-export function subscribeToAllTasks(cb: (tasks: Task[]) => void) {
+export function subscribeToAllTasks(
+  cb: (tasks: Task[]) => void,
+  onError?: (e: Error) => void
+) {
   return onSnapshot(
-    query(collection(db, 'tasks'), orderBy('createdAt', 'desc')),
-    (snap) => cb(snap.docs.map(docToTask))
+    query(collection(db, 'tasks')),
+    (snap) => cb(sortByCreatedAt(snap.docs.map(docToTask), 'desc')),
+    onError
   );
 }
 

@@ -23,10 +23,10 @@ export default function DashboardPage() {
   const [tLoading, setTLoading] = useState(true);
 
   useEffect(() => {
-    const unsub = subscribeToAllTasks((tasks) => {
-      setAllTasks(tasks);
-      setTLoading(false);
-    });
+    const unsub = subscribeToAllTasks(
+      (tasks) => { setAllTasks(tasks); setTLoading(false); },
+      () => setTLoading(false)
+    );
     return unsub;
   }, []);
 

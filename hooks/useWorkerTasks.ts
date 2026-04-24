@@ -9,10 +9,11 @@ export function useWorkerTasks(workerId: string) {
 
   useEffect(() => {
     if (!workerId) return;
-    const unsub = subscribeToWorkerTasks(workerId, (t) => {
-      setTasks(t);
-      setLoading(false);
-    });
+    const unsub = subscribeToWorkerTasks(
+      workerId,
+      (t) => { setTasks(t); setLoading(false); },
+      () => setLoading(false)
+    );
     return unsub;
   }, [workerId]);
 
