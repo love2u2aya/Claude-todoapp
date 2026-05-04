@@ -1,0 +1,8 @@
+{
+  "tasks": [
+    { "id": "1", "title": "週次レポートの確認・提出", "category": "work" },
+    { "id": "2", "title": "受信メールの整理・返信", "category": "work" },
+    { "id": "3", "title": "来週の予定・スケジュール確認", "category": "work" },
+    { "id": "4", "title": "タスクリストの棚卸し", "category": "personal" }
+  ]
+}

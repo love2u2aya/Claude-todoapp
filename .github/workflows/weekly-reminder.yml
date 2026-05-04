@@ -1,0 +1,34 @@
+name: Weekly Slack Reminder
+
+on:
+  schedule:
+    # 月曜 9:00 JST (= 日曜 24:00 UTC = 月曜 0:00 UTC)
+    - cron: '0 0 * * 1'
+    # 木曜 9:00 JST (= 水曜 24:00 UTC = 木曜 0:00 UTC)
+    - cron: '0 0 * * 4'
+  workflow_dispatch:
+    inputs:
+      day_override:
+        description: '曜日を手動指定 (1=月曜の初回, 4=木曜の再通知)'
+        required: false
+        default: '1'
+
+jobs:
+  send-reminder:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Determine day
+        id: day
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "day=${{ inputs.day_override }}" >> $GITHUB_OUTPUT
+          else
+            echo "day=$(date +%u)" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Send Slack reminder
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: node .github/scripts/send-reminder.js ${{ steps.day.outputs.day }}
