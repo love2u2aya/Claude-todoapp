@@ -1,0 +1,40 @@
+{
+  "tasks": [
+    {
+      "id": "1",
+      "title": "週次レポートの作成",
+      "category": "work",
+      "note": "先週の進捗をまとめて共有する"
+    },
+    {
+      "id": "2",
+      "title": "メールの整理・返信",
+      "category": "work",
+      "note": "未返信メールをすべて処理する"
+    },
+    {
+      "id": "3",
+      "title": "来週の予定確認",
+      "category": "work",
+      "note": "カレンダーを見て必要な準備をする"
+    },
+    {
+      "id": "4",
+      "title": "経費精算",
+      "category": "work",
+      "note": "領収書をまとめて申請する"
+    },
+    {
+      "id": "5",
+      "title": "部屋の掃除",
+      "category": "personal",
+      "note": ""
+    }
+  ],
+  "settings": {
+    "timezone": "Asia/Tokyo",
+    "reminderDay": "Monday",
+    "followUpDay": "Thursday",
+    "reminderTime": "09:00"
+  }
+}
