@@ -1,0 +1,51 @@
+name: Weekly Task Reminder
+
+on:
+  schedule:
+    # 月曜日 9:00 JST (= 月曜日 00:00 UTC) — 初回リマインド
+    - cron: '0 0 * * 1'
+    # 木曜日 9:00 JST (= 木曜日 00:00 UTC) — 再リマインド
+    - cron: '0 0 * * 4'
+  # 手動テスト用
+  workflow_dispatch:
+    inputs:
+      reminder_type:
+        description: 'Reminder type (initial / followup)'
+        required: false
+        default: 'initial'
+
+jobs:
+  send-reminder:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Determine reminder type
+        id: type
+        run: |
+          # workflow_dispatch からの手動実行
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "type=${{ github.event.inputs.reminder_type }}" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # cron の曜日で判定（木曜日 = 再リマインド）
+          DAY_OF_WEEK=$(date -u +%u)  # 1=月, 4=木
+          if [ "$DAY_OF_WEEK" = "4" ]; then
+            echo "type=followup" >> "$GITHUB_OUTPUT"
+          else
+            echo "type=initial" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Send Slack reminder
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          REMINDER_TYPE: ${{ steps.type.outputs.type }}
+        run: node scripts/send-slack-reminder.js
